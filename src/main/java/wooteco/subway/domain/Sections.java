@@ -142,7 +142,7 @@ public class Sections {
 
     private SectionsToBeDeletedAndUpdated deleteMiddleSection(Long stationId) {
         Section upSideStation = extractUpSideStation(stationId);
-        Section downSideStation = extractDownSideStation(stationId);
+        Section downSideStation = nextSection(upSideStation);
         Section sectionToBeUpdated = new Section(upSideStation.getId(), upSideStation.getLineId(), upSideStation.getUpStationId(),
                 downSideStation.getDownStationId(), upSideStation.getDistance() + downSideStation.getDistance());
         return new SectionsToBeDeletedAndUpdated(downSideStation, sectionToBeUpdated);
@@ -155,11 +155,9 @@ public class Sections {
                 .orElseThrow(() -> new NotFoundException("중간역 삭제중 상행역을 찾지 못하였습니다."));
     }
 
-    private Section extractDownSideStation(Long stationId) {
-        return values.stream()
-                .filter(s -> s.isUpStation(stationId))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("중간역 삭제중 하행역을 찾지 못하였습니다."));
+    private Section nextSection(Section section) {
+        int previousSectionIndex = values.indexOf(section);
+        return values.get(previousSectionIndex + 1);
     }
 
     public List<Long> getSortedStationIds() {
