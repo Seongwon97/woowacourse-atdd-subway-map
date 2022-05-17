@@ -107,7 +107,7 @@ public class Sections {
 
     public SectionsToBeDeletedAndUpdated delete(Long stationId) {
         validateExistStation(stationId);
-        validateRemainOneSection();
+        validateNotRemainOneSection();
         Section currentLastUpSection = values.get(0);
         Section currentLastDownSection = values.get(values.size() - 1);
         if (currentLastUpSection.isUpStation(stationId) ||
@@ -124,7 +124,7 @@ public class Sections {
         }
     }
 
-    private void validateRemainOneSection() {
+    private void validateNotRemainOneSection() {
         if (values.size() == 1) {
             throw new IllegalArgumentException("구간이 하나인 노선에서는 구간 삭제가 불가합니다.");
         }
